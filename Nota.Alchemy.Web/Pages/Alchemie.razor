@@ -1,0 +1,142 @@
+﻿@page "/Alchemie"
+@inherits AlchemieBase
+
+@using Nota.Alchemy
+
+<h1>Alchemie</h1>
+
+
+@if (this.Recipient is null)
+{
+    <p>Nicht genug Zutaten ausgewählt</p>
+}
+else
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Anteile</th>
+                <th>Verarbeitung</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in this.Recipient.Ingredients)
+            {
+                <tr>
+                    <td> @item.Ingredient.Name</td>
+                    <td> <input type="number" @bind="@item.Ammount" /></td>
+                    <td>
+                        <select @bind="@item.Processing"  >
+                            <option value="">Unverarbeitet</option>
+                            @foreach (var selection in item.AllowedProcessing)
+                            {
+                                @if (selection == item.Processing)
+                                {
+                                    <option value="@selection" selected>@selection.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@selection">@selection.Name</option>
+                                }
+                            }
+                        </select>
+
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>Nebeneffekt</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < this.Recipient.Matrix.Rows; i++)
+            {
+                <tr>
+                    <td> @this.Recipient.Matrix.OrderdIngredients[i].Ingredient.Name</td>
+                    <td>@this.Recipient.Matrix[0, i]</td>
+                    <td>@this.Recipient.Matrix[1, i]</td>
+                    <td>@this.Recipient.Matrix[2, i]</td>
+
+                    <td>@this.Recipient.RowResult[i] (@this.Recipient.RowResult[i].Value)</td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td>@this.Recipient.ColumResult[0]<br />(@this.Recipient.ColumResult[0].Value)</td>
+                <td>@this.Recipient.ColumResult[1]<br />(@this.Recipient.ColumResult[1].Value)</td>
+                <td>@this.Recipient.ColumResult[2]<br />(@this.Recipient.ColumResult[2].Value)</td>
+
+                <td></td>
+
+
+            </tr>
+        </tfoot>
+    </table>
+}
+
+@if (ingredients is null)
+{
+    <p><em>Loading...</em></p>
+
+}
+else
+{
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Auswahl</th>
+                <th>Name</th>
+                <th>Schlüssel</th>
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ingredients)
+            {
+
+                @if (item.Selection)
+                {
+
+                    <tr style="background-color:lightblue;">
+                        <td width="10px"><input type="checkbox" @bind="@item.Selection" /></td>
+                        <td>@item.Ingredient.Name</td>
+                        <td style="font-family:monospace;">@item.Ingredient.AlchemieKey</td>
+                        <td>@item.Ingredient.Order</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td width="10px"><input type="checkbox" @bind="@item.Selection" /></td>
+                        <td>@item.Ingredient.Name</td>
+                        <td style="font-family:monospace;">@item.Ingredient.AlchemieKey</td>
+                        <td>@item.Ingredient.Order</td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+
+
+}
+
